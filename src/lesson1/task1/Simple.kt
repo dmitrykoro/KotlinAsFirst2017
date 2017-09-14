@@ -84,7 +84,18 @@ fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double = sqrt(p
  * Пользователь задает целое число, большее 100 (например, 3801).
  * Определить третью цифру справа в этом числе (в данном случае 8).
  */
-fun thirdDigit(number: Int): Int = TODO()
+fun thirdDigit(number: Int): Int {
+    var tRezult = 0
+    var copyNum = number
+    var cnt = 3
+    while(cnt != 0)
+    {
+        tRezult = copyNum % 10
+        copyNum = copyNum / 10
+        cnt = cnt - 1
+    }
+    return tRezult
+}
 
 /**
  * Простая
@@ -93,7 +104,7 @@ fun thirdDigit(number: Int): Int = TODO()
  * прибыл на станцию назначения в h2 часов m2 минут того же дня (например в 13:01).
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
-fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int = TODO()
+fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int = (hoursArrive - hoursDepart) * 60 + (minutesArrive - minutesDepart)
 
 /**
  * Простая
@@ -102,7 +113,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double = TODO()
+fun accountInThreeYears(initial: Int, percent: Int): Double = initial * pow((1.0 + (percent.toDouble() / 100)), 3.0)
 
 /**
  * Простая
@@ -110,4 +121,15 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = TODO()
  * Пользователь задает целое трехзначное число (например, 478).
  *Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int = TODO()
+fun numberRevert(number: Int): Int {
+    val cnt = 10
+    var num = number
+    var numOfDig = 100
+    var newNum = 0
+    while (numOfDig != 0) {
+        newNum += (num % cnt) * numOfDig
+        numOfDig = numOfDig / 10
+        num = num / 10
+    }
+    return newNum
+}
