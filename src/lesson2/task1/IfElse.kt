@@ -136,21 +136,18 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     if (a + b < c || a + c < b || b + c < a)
         return -1
-    /*else if (pow(a, 2.0) + pow(b, 2.0) == pow(c, 2.0)
-             || pow(b, 2.0) + pow(c, 2.0) == pow(a, 2.0)
-             || pow(a, 2.0) + pow(c, 2.0) == pow(b, 2.0))
-        return 1
-    else if (pow(a, 2.0) + pow(b, 2.0) > pow(c, 2.0)
-            || pow(b, 2.0) + pow(c, 2.0) > pow(a, 2.0)
-            || pow(a, 2.0) + pow(c, 2.0) > pow(b, 2.0))
-        return 2
-    else return 0*/
-    else
-        if (pow(a, 2.0) + pow(b, 2.0) == pow(c, 2.0))
+    else {
+        val maxTriSide: Double = maxOf(a, b, c)
+        val minTriSide: Double = minOf(a, b, c)
+        val medTriSide: Double = a + b + c - maxTriSide - minTriSide
+        val tCos: Double =
+                (pow(medTriSide, 2.0) + pow(minTriSide, 2.0) - pow(maxTriSide, 2.0)) / (2 * medTriSide * minTriSide)
+        if (tCos == 0.0)
             return 1
-        else if (pow(a, 2.0) + pow(b, 2.0) > pow(c, 2.0))
-            return 0
-        else return 2
+        else if (tCos < 0.0)
+            return 2
+        else return 0
+    }
 }
 
 /**
@@ -162,5 +159,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    when {
+        (c > b && d > a) || (a > d && b > c) -> return -1
+        d > a && c < b && c > a && b < d -> return b - c
+        d > a && c < b && c < a && d < b-> return d - a
+        d < b && c > a -> return d - c
+        b < d && a > c -> return b - a
+        a == c && b == d -> return d - c
+    }
     return 0
 }
