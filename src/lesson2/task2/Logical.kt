@@ -14,14 +14,14 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
 
 /**
  * Простая
- *5
+ *
  * Четырехзначное число назовем счастливым, если сумма первых двух ее цифр равна сумме двух последних.
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean {
-    val frstTwo: Int = (number / 1000) % 10 + (number / 100) % 10
-    val scndTwo: Int = number % 10 + (number / 10) % 10
-    return frstTwo == scndTwo
+    val firstSum: Int = (number / 1000) % 10 + (number / 100) % 10
+    val secondSum: Int = number % 10 + (number / 10) % 10
+    return firstSum == secondSum
 }
 
 /**
@@ -43,9 +43,8 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  * Вернуть true, если утверждение верно
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
-                 x2: Double, y2: Double, r2: Double): Boolean {
-    return sqrt(pow(x2 - x1, 2.0) + pow(y2 - y1, 2.0)) <= abs(r2 - r1)
-}
+                 x2: Double, y2: Double, r2: Double): Boolean =
+        sqrt(pow(x2 - x1, 2.0) + pow(y2 - y1, 2.0)) <= r2 - r1
 
 /**
  * Средняя
@@ -56,4 +55,7 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = TODO()
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =
+            (a <= r && b <= s) || (a <= s && b <= r) || (a <= s && c <= r)
+            || (a <= r && c <= s) || (b <= r && c <= s) || (b <= s && c <= r)
+
