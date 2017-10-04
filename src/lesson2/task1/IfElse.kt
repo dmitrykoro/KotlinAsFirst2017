@@ -77,16 +77,14 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    var kXrX1: Boolean = (kingX != rookX1)
-    var kYrY1: Boolean = (kingY != rookY1)
-    var kXrX2: Boolean = (kingX != rookX2)
-    var kYrY2: Boolean = (kingY != rookY2)
+    var kingIsNotBeingAttackedByRook1: Boolean = (kingX != rookX1) && (kingY != rookY1)
+    var kingIsNotBeingAttackedByRook2: Boolean = (kingX != rookX2) && (kingY != rookY2)
 
-    when {
-        kXrX1 && kYrY1 && kXrX2 && kYrY2 -> return 0
-        (!kXrX1 || !kYrY1) && kXrX2 && kYrY2 -> return 1
-        (!kXrX2 || !kYrY2) && kXrX1 && kYrY1 -> return 2
-        else -> return 3
+    return when {
+        kingIsNotBeingAttackedByRook1 && kingIsNotBeingAttackedByRook2 -> 0
+        !kingIsNotBeingAttackedByRook1 && kingIsNotBeingAttackedByRook2 -> 1
+        !kingIsNotBeingAttackedByRook2 && kingIsNotBeingAttackedByRook1 -> 2
+        else -> 3
     }
 }
 
@@ -104,15 +102,14 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
+    var bishopAttacksKing: Boolean = (abs(kingX - bishopX) == abs(kingY - bishopY))
+    var rookAttacksKing: Boolean = (kingX == rookX || kingY == rookY)
     
-    var kXbX: Boolean = (abs(kingX - bishopX) == abs(kingY - bishopY))
-    var kXrX: Boolean = (kingX == rookX || kingY == rookY)
-    
-    when {
-        kXbX && kXrX -> return 3
-        kXbX && !kXrX -> return 2
-        !kXbX && kXrX -> return 1
-        else -> return 0
+    return when {
+        bishopAttacksKing && rookAttacksKing -> 3
+        bishopAttacksKing && !rookAttacksKing -> 2
+        !bishopAttacksKing && rookAttacksKing -> 1
+        else -> 0
     }
 }
 
@@ -134,10 +131,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
         val tCos: Double =
                 (pow(midSide, 2.0) + pow(minSide, 2.0) - pow(maxSide, 2.0))/
                         (2 * midSide * minSide)
-      when {
-          tCos == 0.0 -> return 1
-          tCos < 0.0 -> return 2
-          else -> return 0
+      return when {
+          tCos == 0.0 -> 1
+          tCos < 0.0 -> 2
+          else -> 0
       }
     }
 }
@@ -151,12 +148,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
-    b in a..c && c in b..d  && b != c -> -1
-    b in a..c && c in b..d -> 0
-    c in a..b && b in a..d -> b - c
-    a in c..d && d in a..b -> d - a
-    a in d..b && d in c..a && d != a -> -1
-    a in d..b && d in c..a -> 0
-    a in c..b && b in a..d -> b - a
-    else -> d - c
+    (b in a..c && c in b..d  && b != c) ||
+            (a in d..b && d in c..a && d != a) -> -1 // A...B C...D или C...D A...B
+    (b in a..c && c in b..d) ||
+            (a in d..b && d in c..a) -> 0            // A...B(C)...D или C...D(A)...B
+    c in a..b && b in a..d -> b - c                  // A...C|||B...D (||| - область пересечания)
+    a in c..d && d in a..b -> d - a                  // C...A|||D...B
+    a in c..b && b in a..d -> b - a                  // C...A|||B...D
+    else -> d - c                                    // A...C|||D...B
 }
