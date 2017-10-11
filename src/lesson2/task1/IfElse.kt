@@ -77,13 +77,13 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    var kingIsNotBeingAttackedByRook1: Boolean = (kingX != rookX1) && (kingY != rookY1)
-    var kingIsNotBeingAttackedByRook2: Boolean = (kingX != rookX2) && (kingY != rookY2)
+    var rook1NotAttacks: Boolean = (kingX != rookX1) && (kingY != rookY1)
+    var rook2NotAttacks: Boolean = (kingX != rookX2) && (kingY != rookY2)
 
     return when {
-        kingIsNotBeingAttackedByRook1 && kingIsNotBeingAttackedByRook2 -> 0
-        !kingIsNotBeingAttackedByRook1 && kingIsNotBeingAttackedByRook2 -> 1
-        !kingIsNotBeingAttackedByRook2 && kingIsNotBeingAttackedByRook1 -> 2
+        rook1NotAttacks && rook2NotAttacks -> 0
+        !rook1NotAttacks && rook2NotAttacks -> 1
+        !rook2NotAttacks && rook1NotAttacks -> 2
         else -> 3
     }
 }
@@ -102,13 +102,13 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    var bishopAttacksKing: Boolean = (abs(kingX - bishopX) == abs(kingY - bishopY))
-    var rookAttacksKing: Boolean = (kingX == rookX || kingY == rookY)
+    var bishopAttacks: Boolean = (abs(kingX - bishopX) == abs(kingY - bishopY))
+    var rookAttacks: Boolean = (kingX == rookX || kingY == rookY)
     
     return when {
-        bishopAttacksKing && rookAttacksKing -> 3
-        bishopAttacksKing && !rookAttacksKing -> 2
-        !bishopAttacksKing && rookAttacksKing -> 1
+        bishopAttacks && rookAttacks -> 3
+        bishopAttacks && !rookAttacks -> 2
+        !bishopAttacks && rookAttacks -> 1
         else -> 0
     }
 }
@@ -155,5 +155,5 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
     c in a..b && b in a..d -> b - c                  // A...C|||B...D (||| - область пересечания)
     a in c..d && d in a..b -> d - a                  // C...A|||D...B
     a in c..b && b in a..d -> b - a                  // C...A|||B...D
-    else -> d - c                                    // A...C|||D...B
+    else -> d - c
 }

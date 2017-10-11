@@ -164,24 +164,25 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var sinVal: Double = x
+    var sinVal: Double = x % (2 * Math.PI)
+    val sinValCnst = sinVal
     var signOfParity = 1
     var xDeg: Double = 3.0
     var nextMember: Double = 0.0
     while (true) {
-        nextMember = pow(x, xDeg) / factorial(xDeg.toInt())
+        nextMember = pow(sinValCnst, xDeg) / factorial(xDeg.toInt())
         if (signOfParity % 2 != 0) {
             sinVal -= nextMember
             signOfParity++
             xDeg += 2.0
-            if (nextMember < eps)
+            if (abs(nextMember) < eps)
                 return sinVal
         }
         else {
             sinVal += nextMember
             signOfParity++
             xDeg += 2.0
-            if (nextMember < eps)
+            if (abs(nextMember) < eps)
                 return sinVal
         }
     }
@@ -196,23 +197,24 @@ fun sin(x: Double, eps: Double): Double {
  */
 fun cos(x: Double, eps: Double): Double {
     var cosVal: Double = 1.0
+    val inpCos = x % (2 * Math.PI)
     var signOfParity = 1
     var xDeg: Double = 2.0
     var nextMember: Double = 0.0
     while (true) {
-        nextMember = pow(x, xDeg) / factorial(xDeg.toInt())
+        nextMember = pow(inpCos, xDeg) / factorial(xDeg.toInt())
         if (signOfParity % 2 != 0) {
             cosVal -= nextMember
             signOfParity++
             xDeg += 2.0
-            if (nextMember < eps)
+            if (abs(nextMember) < eps)
                 return cosVal
         }
         else {
             cosVal += nextMember
             signOfParity++
             xDeg += 2.0
-            if (nextMember < eps)
+            if (abs(nextMember) < eps)
                 return cosVal
         }
     }
@@ -288,7 +290,7 @@ fun hasDifferentDigits(n: Int): Boolean {
             return true
         }
          num /= 10
-    } while (num % 10 != 0)
+    } while (num - 1 != -1)
     return false
 }
 
