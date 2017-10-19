@@ -2,6 +2,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 import lesson4.task1.abs
 import java.lang.Math.*
 
@@ -36,8 +37,8 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    age in 11..14 || age in 111..114 -> "$age лет"
-    age % 10 in 5..9 || age % 10 == 0 -> "$age лет"
+    age in 11..14 || age in 111..114 ||
+            age % 10 in 5..9 || age % 10 == 0 -> "$age лет"
     age % 10 == 1 -> "$age год"
     else -> "$age года"
 }
@@ -57,12 +58,11 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val s2 = t2 * v2
     val s3 = t3 * v3
     val halfS = (s1 + s2 + s3) / 2
-    if (halfS <= s1)
-        return halfS / v1
-    else if (halfS > s1 && halfS <= s1 + s2)
-        return (halfS - s1) / v2 + t1
-    else
-        return (halfS - s1 - s2) / v3 + t1 + t2
+    return when {
+        halfS <= s1 -> halfS / v1
+        halfS in s1..(s1 + s2) -> (halfS - s1) / v2 + t1
+        else -> (halfS - s1 - s2) / v3 + t1 + t2
+    }
 }
 
 /**
@@ -77,14 +77,13 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    var rook1NotAttacks: Boolean = (kingX != rookX1) && (kingY != rookY1)
-    var rook2NotAttacks: Boolean = (kingX != rookX2) && (kingY != rookY2)
-
+    val rook1Attacks = (kingX == rookX1) || (kingY == rookY1)
+    val rook2Attacks = (kingX == rookX2) || (kingY == rookY2)
     return when {
-        rook1NotAttacks && rook2NotAttacks -> 0
-        !rook1NotAttacks && rook2NotAttacks -> 1
-        !rook2NotAttacks && rook1NotAttacks -> 2
-        else -> 3
+        !rook1Attacks && !rook2Attacks -> 0
+        rook1Attacks && !rook2Attacks -> 1
+        !rook1Attacks && rook2Attacks -> 2
+       else -> 3
     }
 }
 
@@ -102,9 +101,8 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    var bishopAttacks: Boolean = (abs(kingX - bishopX) == abs(kingY - bishopY))
-    var rookAttacks: Boolean = (kingX == rookX || kingY == rookY)
-    
+    val bishopAttacks = abs(kingX - bishopX) == abs(kingY - bishopY)
+    val rookAttacks = kingX == rookX || kingY == rookY
     return when {
         bishopAttacks && rookAttacks -> 3
         bishopAttacks && !rookAttacks -> 2
@@ -129,7 +127,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
         val minSide: Double = minOf(a, b, c)
         val midSide: Double = a + b + c - maxSide - minSide
         val tCos: Double =
-                (pow(midSide, 2.0) + pow(minSide, 2.0) - pow(maxSide, 2.0))/
+                /*(pow(midSide, 2.0) + pow(minSide, 2.0) - pow(maxSide, 2.0))/
+                        (2 * midSide * minSide)*/
+                (sqr(midSide) + sqr(minSide) - sqr(maxSide)) /
                         (2 * midSide * minSide)
       return when {
           tCos == 0.0 -> 1
@@ -148,12 +148,11 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
-    (b in a..c && c in b..d  && b != c) ||
-            (a in d..b && d in c..a && d != a) -> -1 // A...B C...D или C...D A...B
-    (b in a..c && c in b..d) ||
-            (a in d..b && d in c..a) -> 0            // A...B(C)...D или C...D(A)...B
+    (b in a..c && c in b..d && b == c) ||
+            (a in d..b && d in c..a && d == a) -> 0  // A...B(C)...D или C...D(A)...B
     c in a..b && b in a..d -> b - c                  // A...C|||B...D (||| - область пересечания)
     a in c..d && d in a..b -> d - a                  // C...A|||D...B
     a in c..b && b in a..d -> b - a                  // C...A|||B...D
-    else -> d - c
+    c in a..d && d in c..b -> d - c                  // A...C|||D...B
+    else -> -1                                       // A...B C...D или C...D A...B
 }
