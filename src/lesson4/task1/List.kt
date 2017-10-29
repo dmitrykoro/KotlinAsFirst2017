@@ -2,6 +2,9 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import java.lang.Math.pow
+import java.lang.Math.sqrt
 
 /**
  * Пример
@@ -106,14 +109,26 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+
+fun abs(v: List<Double>): Double {
+    var result = 0.0
+    for (i in 0 until v.size) {
+        result += sqr(v[i])
+    }
+    return sqrt(result)
+}
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    return when {
+        list.isEmpty() -> 0.0
+        else -> list.sum() / list.size
+    }
+}
 
 /**
  * Средняя
@@ -123,7 +138,16 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    if (list.isEmpty())
+        return list
+    val avg = list.sum() / list.size
+    for (i in 0 until list.size)
+        list[i] -= avg
+    return list
+}
+
+
 
 /**
  * Средняя
@@ -132,7 +156,14 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
-fun times(a: List<Double>, b: List<Double>): Double = TODO()
+fun times(a: List<Double>, b: List<Double>): Double {
+    if (a.size != b.size)
+        return -1.0
+    var scalMult = 0.0
+    for (i in 0 until a.size)
+        scalMult += a[i] * b[i]
+    return scalMult
+}
 
 /**
  * Средняя
@@ -142,7 +173,15 @@ fun times(a: List<Double>, b: List<Double>): Double = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0.0 при любом x.
  */
-fun polynom(p: List<Double>, x: Double): Double = TODO()
+fun polynom(p: List<Double>, x: Double): Double {
+    if (p.isEmpty())
+        return 0.0
+    var pX = p[0]
+    for (i in 1 until p.size) {
+        pX += p[i] * pow(x, i.toDouble())
+    }
+    return pX
+}
 
 /**
  * Средняя
@@ -154,7 +193,21 @@ fun polynom(p: List<Double>, x: Double): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
+fun accumulate(list: MutableList<Double>): MutableList<Double> {
+    if (list.isEmpty())
+        return list
+    var sum = list.sum()
+    var allNext = 0.0
+    var tmp = 0.0
+    var i = list.size
+    while (i >= 2) {
+        tmp = list[i-1]
+        list[i-1] = sum - allNext
+        allNext += tmp
+        i--
+    }
+    return list
+}
 
 /**
  * Средняя
@@ -163,7 +216,19 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    var div = 2
+    var num = n
+    val result = mutableListOf<Int>()
+    while (num > 1) {
+        if (num % div == 0) {
+            num /= div
+            result += div
+        } else
+            div++
+    }
+    return result.toList()
+}
 
 /**
  * Сложная
@@ -171,7 +236,20 @@ fun factorize(n: Int): List<Int> = TODO()
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+    var div = 2
+    var num = n
+    var result = ""
+    while (num > 1) {
+        if (num % div == 0) {
+            num /= div
+            result += "$div*"
+        } else
+            div++
+    }
+    result = result.substring(0, result.length - 1)
+    return result
+}
 
 /**
  * Средняя
