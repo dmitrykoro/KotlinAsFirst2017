@@ -3,6 +3,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import lesson3.task1.digitNumber
 import java.lang.Math.pow
 import java.lang.Math.sqrt
 
@@ -258,7 +259,16 @@ fun factorizeToString(n: Int): String {
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    var num = n
+    var result = mutableListOf<Int>()
+    do {
+        result.add(num % base)
+        num /= base
+    } while (num != 0)
+    result.reverse()
+    return result
+}
 
 /**
  * Сложная
@@ -268,7 +278,20 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    var num = n
+    val convert = "0123456789abcdefghijklmnopqrstuvwxyz"
+    var resultTemp = mutableListOf<Int>()
+    var result = ""
+    do {
+        resultTemp.add(num % base)
+        num /= base
+    } while (num != 0)
+    resultTemp.reverse()
+    for (i in 0 until resultTemp.size)
+        result += convert[resultTemp[i]]
+    return result
+}
 
 /**
  * Средняя
@@ -277,7 +300,15 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var result  = 0
+    var tPow = 0
+    for (i in (digits.size - 1) downTo 0) {
+        result += digits[i] * pow(base.toDouble(), tPow.toDouble()).toInt()
+        tPow++
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -288,7 +319,19 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    val convert = "0123456789abcdefghijklmnopqrstuvwxyz"
+    var result  = 0
+    var tPow = 0
+    var temp = 0
+    for (i in (str.length - 1) downTo 0) {
+        temp = convert.indexOf(str[i], 0)
+        result += temp * pow(base.toDouble(), tPow.toDouble()).toInt()
+        tPow++
+    }
+    return result
+
+}
 
 /**
  * Сложная
@@ -307,4 +350,51 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    var digitNumber = digitNumber(n)
+    var num = n
+    var result = ""
+    var nine = listOf<String>("девятьсот", "девяносто", "девять")
+    var eight = listOf<String>("восемьсот", "восемьдесят", "восемь")
+    var seven = listOf<String>("семьсот", "семьдесят", "семь")
+    var six = listOf<String>("шестьсот", "шестьдесят", "шесть")
+    var five = listOf<String>("пятьсот", "пятьдесят", "пять")
+    var four = listOf<String>("четыреста", "сорок", "четыре")
+    var three = listOf<String>("триста", "тридцать", "три")
+    var two = listOf<String>("двести", "двадцать", "два")
+    var one = listOf<String>("сто", "", "один")
+    var add = listOf<String>("тысяч", "тысяча")
+
+    when {
+        digitNumber == 6 -> when {
+            num / 100000 == 9 -> result + nine[0]
+            num / 100000 == 8 -> result + eight[0]
+            num / 100000 == 7 -> result + seven[0]
+            num / 100000 == 6 -> result + six[0]
+            num / 100000 == 5 -> result + five[0]
+            num / 100000 == 4 -> result + four[0]
+            num / 100000 == 3 -> result + three[0]
+            num / 100000 == 2 -> result + two[0]
+            num / 100000 == 1 -> result + one[0]
+
+
+
+        }
+        digitNumber == 5 -> when {
+
+        }
+        digitNumber == 4 -> when {
+
+        }
+        digitNumber == 3 -> when {
+
+        }
+        digitNumber == 2 -> when {
+
+        }
+        digitNumber == 1 -> when {
+
+        }
+    }
+    return ""
+}
