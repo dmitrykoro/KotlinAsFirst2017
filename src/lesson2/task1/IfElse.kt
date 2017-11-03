@@ -127,8 +127,6 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
         val minSide: Double = minOf(a, b, c)
         val midSide: Double = a + b + c - maxSide - minSide
         val tCos: Double =
-                /*(pow(midSide, 2.0) + pow(minSide, 2.0) - pow(maxSide, 2.0))/
-                        (2 * midSide * minSide)*/
                 (sqr(midSide) + sqr(minSide) - sqr(maxSide)) /
                         (2 * midSide * minSide)
       return when {

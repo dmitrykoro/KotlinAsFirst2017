@@ -2,6 +2,7 @@
 package lesson3.task1
 
 import java.lang.Math.*
+import lesson1.task1.sqr
 
 /**
  * Пример
@@ -83,15 +84,13 @@ fun digitNumber(n: Int): Int {
 fun fib(n: Int): Int {
     var result = 1
     var prevStep = 1
-    var newResult = 0
-    if (n > 2) {
-        for (i in 3..n) {
-            newResult = prevStep + result
-            result = prevStep
-            prevStep = newResult
-        }
-        return newResult
-    } else return 1
+    var newResult = 1
+    for (i in 3..n) {
+        newResult = prevStep + result
+        result = prevStep
+        prevStep = newResult
+    }
+    return newResult
 }
 
 /**
@@ -161,8 +160,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in m..n) {
-        if (sqrt(i.toDouble()) % 1 == 0.0)
+    for (i in 0..n) {
+        if (sqr(i.toDouble()) in m..n)
             return true
     }
     return false
