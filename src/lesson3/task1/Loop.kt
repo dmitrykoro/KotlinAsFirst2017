@@ -64,7 +64,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Например, число 1 содержит 1 цифру, 456 -- 3 цифры, 65536 -- 5 цифр.
  */
 fun digitNumber(n: Int): Int {
-    var cnt: Int = 0
+    var cnt = 0
     var num = n
     if (num == 0)
         return 1
@@ -99,14 +99,18 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    var k: Int = maxOf(m, n)
-    var z: Int = k % n
-    var c: Int = k % m
-    while ((k % n != 0) || (k % m != 0)) {
-        k++
+fun lcm(m: Int, n: Int): Int = m * n / gcd(m, n)
+
+fun gcd(m: Int, n: Int): Int {
+    var remainder: Int
+    var a = m
+    var b = n
+    while (b > 0) {
+        remainder = a % b
+        a = b
+        b = remainder
     }
-    return k
+    return a
 }
 
 /**
@@ -115,7 +119,7 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var mDiv: Int = 1
+    var mDiv = 1
     do {
         mDiv++
     } while (n % mDiv != 0)
@@ -143,13 +147,9 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var tDiv: Int = 1
-    do {
-        tDiv++
-        if (n % tDiv == 0 && m % tDiv == 0)
-            return false
-    } while (tDiv < max(m, n))
-    return true
+    if (gcd(m, n) == 1)
+        return true
+    return false
 }
 
 /**
@@ -161,7 +161,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     for (i in 0..n) {
-        if (sqr(i.toDouble()) in m..n)
+        if (sqr(i.toDouble()).toInt() in m..n)
             return true
     }
     return false
@@ -178,24 +178,19 @@ fun sin(x: Double, eps: Double): Double {
     var sinVal: Double = x % (2 * Math.PI)
     val sinValCnst = sinVal
     var signOfParity = 1
-    var xDeg: Double = 3.0
-    var nextMember: Double = 0.0
+    var deg = 3.0
     while (true) {
-        nextMember = pow(sinValCnst, xDeg) / factorial(xDeg.toInt())
-        if (signOfParity % 2 != 0) {
+        val nextMember = pow(sinValCnst, deg) / factorial(deg.toInt())
+        if (signOfParity > 0) {
             sinVal -= nextMember
-            signOfParity++
-            xDeg += 2.0
-            if (abs(nextMember) < eps)
-                return sinVal
         }
         else {
             sinVal += nextMember
-            signOfParity++
-            xDeg += 2.0
-            if (abs(nextMember) < eps)
-                return sinVal
         }
+        signOfParity *= -1
+        deg += 2.0
+        if (abs(nextMember) < eps)
+            return sinVal
     }
 }
 
@@ -207,27 +202,22 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var cosVal: Double = 1.0
+    var cosVal = 1.0
     val inpCos = x % (2 * Math.PI)
     var signOfParity = 1
-    var xDeg: Double = 2.0
-    var nextMember: Double = 0.0
+    var deg = 2.0
     while (true) {
-        nextMember = pow(inpCos, xDeg) / factorial(xDeg.toInt())
-        if (signOfParity % 2 != 0) {
+        val nextMember = pow(inpCos, deg) / factorial(deg.toInt())
+        if (signOfParity > 0) {
             cosVal -= nextMember
-            signOfParity++
-            xDeg += 2.0
-            if (abs(nextMember) < eps)
-                return cosVal
         }
         else {
             cosVal += nextMember
-            signOfParity++
-            xDeg += 2.0
-            if (abs(nextMember) < eps)
-                return cosVal
         }
+        signOfParity *= -1
+        deg += 2.0
+        if (abs(nextMember) < eps)
+            return cosVal
     }
 }
 
@@ -240,16 +230,12 @@ fun cos(x: Double, eps: Double): Double {
 fun revert(n: Int): Int {
     if (n == 0)
         return n
-    var numToMultipleOn: Int = 1
+    var numToMultipleOn = pow(10.0, digitNumber(n).toDouble() - 1)
     var tmpNum = n
     var newNum = 0
-    while (tmpNum / 10 != 0) {
-        numToMultipleOn *= 10
-        tmpNum /= 10
-    }
     tmpNum = n
-    while (numToMultipleOn != 0) {
-        newNum += tmpNum % 10 * numToMultipleOn
+    while (numToMultipleOn.toInt() != 0) {
+        newNum += tmpNum % 10 * numToMultipleOn.toInt()
         tmpNum /= 10
         numToMultipleOn /= 10
     }
@@ -266,23 +252,15 @@ fun revert(n: Int): Int {
 fun isPalindrome(n: Int): Boolean {
     var num = n
     var numBackwards = revert(num)
-    var cntOfDigits = 1
-    while (num / 10 != 0) {
-        cntOfDigits++
-        num /= 10
-    }
-    if (cntOfDigits % 2 != 0) {
-        cntOfDigits--
-    }
-    cntOfDigits /= 2
+    var halfSize = digitNumber(n) / 2
     num = n
-    while (cntOfDigits != 0) {
+    while (halfSize != 0) {
         if (num % 10 != numBackwards % 10) {
             return false
         }
         num /= 10
         numBackwards /= 10
-        cntOfDigits--
+        halfSize--
     }
     return true
 }
@@ -294,10 +272,10 @@ fun isPalindrome(n: Int): Boolean {
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var tLastDigit = n % 10
+    var lastDigit = n % 10
     var num = n
      do {
-        if (num % 10 != tLastDigit) {
+        if (num % 10 != lastDigit) {
             return true
         }
          num /= 10
@@ -312,7 +290,21 @@ fun hasDifferentDigits(n: Int): Boolean {
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var sqSequence = 0
+    var length = 0
+    var count = 1.0
+    while (length < n) {
+        sqSequence = sqr(count).toInt()
+        length += digitNumber(sqSequence)
+        count++
+    }
+    while (length != n) {
+        sqSequence /= 10
+        length--
+    }
+    return sqSequence % 10
+}
 
 /**
  * Сложная
@@ -321,4 +313,18 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  * 1123581321345589144...
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var fibSequence = 0
+    var length = 0
+    var count = 1
+    while (length < n) {
+        fibSequence = fib(count)
+        length += digitNumber(fibSequence)
+        count++
+    }
+    while (length != n) {
+        fibSequence /= 10
+        length--
+    }
+    return fibSequence % 10
+}

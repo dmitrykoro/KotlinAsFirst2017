@@ -113,9 +113,8 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
 
 fun abs(v: List<Double>): Double {
     var result = 0.0
-    for (i in 0 until v.size) {
-        result += sqr(v[i])
-    }
+    for (i in v)
+        result += sqr(i)
     return sqrt(result)
 }
 
@@ -124,12 +123,7 @@ fun abs(v: List<Double>): Double {
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    return when {
-        list.isEmpty() -> 0.0
-        else -> list.sum() / list.size
-    }
-}
+fun mean(list: List<Double>): Double = if (list.isEmpty()) {0.0} else {list.sum() / list.size}
 
 /**
  * Средняя
@@ -159,7 +153,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Double>, b: List<Double>): Double {
     if (a.size != b.size)
-        return -1.0
+        return error("Error")
     var scalMult = 0.0
     for (i in 0 until a.size)
         scalMult += a[i] * b[i]
@@ -175,11 +169,11 @@ fun times(a: List<Double>, b: List<Double>): Double {
  * Значение пустого многочлена равно 0.0 при любом x.
  */
 fun polynom(p: List<Double>, x: Double): Double {
-    if (p.isEmpty())
-        return 0.0
-    var pX = p[0]
-    for (i in 1 until p.size) {
-        pX += p[i] * pow(x, i.toDouble())
+    var pX = 0.0
+    var X = 1.0
+    for (i in p) {
+        pX += i * X
+        X *= x
     }
     return pX
 }
@@ -197,15 +191,12 @@ fun polynom(p: List<Double>, x: Double): Double {
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
     if (list.isEmpty())
         return list
-    var sum = list.sum()
-    var allNext = 0.0
     var tmp = 0.0
-    var i = list.size
-    while (i >= 2) {
-        tmp = list[i-1]
-        list[i-1] = sum - allNext
-        allNext += tmp
-        i--
+    var toAdd = 0.0
+    for (i in 0 until list.size) {
+        tmp = list[i]
+        list[i] += toAdd
+        toAdd += tmp
     }
     return list
 }
@@ -220,15 +211,15 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
 fun factorize(n: Int): List<Int> {
     var div = 2
     var num = n
-    val result = mutableListOf<Int>()
+    val listOfSimpleMultipliers = mutableListOf<Int>()
     while (num > 1) {
         if (num % div == 0) {
             num /= div
-            result += div
+            listOfSimpleMultipliers += div
         } else
             div++
     }
-    return result.toList()
+    return listOfSimpleMultipliers
 }
 
 /**
@@ -238,18 +229,12 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
 fun factorizeToString(n: Int): String {
-    var div = 2
-    var num = n
-    var result = ""
-    while (num > 1) {
-        if (num % div == 0) {
-            num /= div
-            result += "$div*"
-        } else
-            div++
+    var resultInList = factorize(n)
+    var stringOfSimpleMultipliers = ""
+    for (i in resultInList) {
+        stringOfSimpleMultipliers += "$i*"
     }
-    result = result.substring(0, result.length - 1)
-    return result
+    return stringOfSimpleMultipliers.substring(0, stringOfSimpleMultipliers.length - 1)
 }
 
 /**
@@ -266,8 +251,7 @@ fun convert(n: Int, base: Int): List<Int> {
         result.add(num % base)
         num /= base
     } while (num != 0)
-    result.reverse()
-    return result
+    return result.reversed()
 }
 
 /**
@@ -301,13 +285,13 @@ fun convertToString(n: Int, base: Int): String {
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 fun decimal(digits: List<Int>, base: Int): Int {
-    var result  = 0
-    var tPow = 0
+    var numberInDecimal = 0
+    var tPow = 0.0
     for (i in (digits.size - 1) downTo 0) {
-        result += digits[i] * pow(base.toDouble(), tPow.toDouble()).toInt()
+        numberInDecimal += digits[i] * pow(base.toDouble(), tPow).toInt()
         tPow++
     }
-    return result
+    return numberInDecimal
 }
 
 /**
