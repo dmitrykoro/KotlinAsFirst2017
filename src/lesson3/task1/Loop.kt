@@ -146,11 +146,9 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    if (gcd(m, n) == 1)
-        return true
-    return false
-}
+
+fun isCoPrime(m: Int, n: Int): Boolean = (gcd(m, n) == 1)
+
 
 /**
  * Простая
@@ -159,13 +157,9 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in 0..n) {
-        if (sqr(i.toDouble()).toInt() in m..n)
-            return true
-    }
-    return false
-}
+
+fun squareBetweenExists(m: Int, n: Int): Boolean =
+     (sqr(sqrt(n.toDouble()) - (sqrt(n.toDouble()) % 1)) in m..n)
 
 /**
  * Средняя
@@ -174,6 +168,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
+
 fun sin(x: Double, eps: Double): Double {
     var sinVal: Double = x % (2 * Math.PI)
     val sinValCnst = sinVal
@@ -181,12 +176,7 @@ fun sin(x: Double, eps: Double): Double {
     var deg = 3.0
     while (true) {
         val nextMember = pow(sinValCnst, deg) / factorial(deg.toInt())
-        if (signOfParity > 0) {
-            sinVal -= nextMember
-        }
-        else {
-            sinVal += nextMember
-        }
+        sinVal -= nextMember * signOfParity
         signOfParity *= -1
         deg += 2.0
         if (abs(nextMember) < eps)
@@ -201,6 +191,7 @@ fun sin(x: Double, eps: Double): Double {
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
+
 fun cos(x: Double, eps: Double): Double {
     var cosVal = 1.0
     val inpCos = x % (2 * Math.PI)
@@ -208,12 +199,7 @@ fun cos(x: Double, eps: Double): Double {
     var deg = 2.0
     while (true) {
         val nextMember = pow(inpCos, deg) / factorial(deg.toInt())
-        if (signOfParity > 0) {
-            cosVal -= nextMember
-        }
-        else {
-            cosVal += nextMember
-        }
+        cosVal -= nextMember * signOfParity
         signOfParity *= -1
         deg += 2.0
         if (abs(nextMember) < eps)
@@ -249,21 +235,7 @@ fun revert(n: Int): Int {
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean {
-    var num = n
-    var numBackwards = revert(num)
-    var halfSize = digitNumber(n) / 2
-    num = n
-    while (halfSize != 0) {
-        if (num % 10 != numBackwards % 10) {
-            return false
-        }
-        num /= 10
-        numBackwards /= 10
-        halfSize--
-    }
-    return true
-}
+fun isPalindrome(n: Int): Boolean = (n == revert(n))
 
 /**
  * Средняя
@@ -272,13 +244,13 @@ fun isPalindrome(n: Int): Boolean {
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var lastDigit = n % 10
+    val lastDigit = n % 10
     var num = n
-     do {
+    do {
         if (num % 10 != lastDigit) {
             return true
         }
-         num /= 10
+        num /= 10
     } while (num - 1 != -1)
     return false
 }
