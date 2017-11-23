@@ -159,7 +159,7 @@ fun isCoPrime(m: Int, n: Int): Boolean = (gcd(m, n) == 1)
  */
 
 fun squareBetweenExists(m: Int, n: Int): Boolean =
-     (sqr(sqrt(n.toDouble()) - (sqrt(n.toDouble()) % 1)) in m..n)
+     sqr(sqrt(n.toDouble()) - (sqrt(n.toDouble()) % 1)) in m..n
 
 /**
  * Средняя
@@ -235,7 +235,7 @@ fun revert(n: Int): Int {
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean = (n == revert(n))
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя
@@ -251,7 +251,7 @@ fun hasDifferentDigits(n: Int): Boolean {
             return true
         }
         num /= 10
-    } while (num - 1 != -1)
+    } while (num != 0)
     return false
 }
 

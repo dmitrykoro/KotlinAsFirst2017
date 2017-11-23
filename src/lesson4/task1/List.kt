@@ -123,7 +123,7 @@ fun abs(v: List<Double>): Double {
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = if (list.isEmpty()) {0.0} else {list.sum() / list.size}
+fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else list.sum() / list.size
 
 /**
  * Средняя
@@ -170,10 +170,10 @@ fun times(a: List<Double>, b: List<Double>): Double {
  */
 fun polynom(p: List<Double>, x: Double): Double {
     var pX = 0.0
-    var X = 1.0
+    var xInPow = 1.0
     for (i in p) {
-        pX += i * X
-        X *= x
+        pX += i * xInPow
+        xInPow *= x
     }
     return pX
 }
@@ -229,7 +229,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
 fun factorizeToString(n: Int): String {
-    var resultInList = factorize(n)
+    val resultInList = factorize(n)
     var stringOfSimpleMultipliers = ""
     for (i in resultInList) {
         stringOfSimpleMultipliers += "$i*"
@@ -246,7 +246,7 @@ fun factorizeToString(n: Int): String {
  */
 fun convert(n: Int, base: Int): List<Int> {
     var num = n
-    var result = mutableListOf<Int>()
+    val result = mutableListOf<Int>()
     do {
         result.add(num % base)
         num /= base
@@ -263,18 +263,16 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    var num = n
-    val convert = "0123456789abcdefghijklmnopqrstuvwxyz"
-    var resultTemp = mutableListOf<Int>()
-    var result = ""
-    do {
-        resultTemp.add(num % base)
-        num /= base
-    } while (num != 0)
-    resultTemp.reverse()
-    for (i in 0 until resultTemp.size)
-        result += convert[resultTemp[i]]
-    return result
+    val numberInList = convert(n, base)
+    numberInList.toMutableList()
+    var resultString = ""
+    for (i in 0 until numberInList.size) {
+        if (numberInList[i] <= 9)
+            resultString += '0' + numberInList[i]
+        else
+            resultString += 'a' + numberInList[i] - 10
+    }
+    return resultString
 }
 
 /**
@@ -304,16 +302,14 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val convert = "0123456789abcdefghijklmnopqrstuvwxyz"
-    var result  = 0
-    var tPow = 0
-    var temp = 0
-    for (i in (str.length - 1) downTo 0) {
-        temp = convert.indexOf(str[i], 0)
-        result += temp * pow(base.toDouble(), tPow.toDouble()).toInt()
-        tPow++
+    val result  = mutableListOf<Int>()
+    for (i in str) {
+        if (i - '0' <= 9)
+            result.add(i - '0')
+        else
+            result.add(i - 'a' + 10)
     }
-    return result
+    return decimal(result, base)
 
 }
 
@@ -334,51 +330,4 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String {
-    var digitNumber = digitNumber(n)
-    var num = n
-    var result = ""
-    var nine = listOf<String>("девятьсот", "девяносто", "девять")
-    var eight = listOf<String>("восемьсот", "восемьдесят", "восемь")
-    var seven = listOf<String>("семьсот", "семьдесят", "семь")
-    var six = listOf<String>("шестьсот", "шестьдесят", "шесть")
-    var five = listOf<String>("пятьсот", "пятьдесят", "пять")
-    var four = listOf<String>("четыреста", "сорок", "четыре")
-    var three = listOf<String>("триста", "тридцать", "три")
-    var two = listOf<String>("двести", "двадцать", "два")
-    var one = listOf<String>("сто", "", "один")
-    var add = listOf<String>("тысяч", "тысяча")
-
-    when {
-        digitNumber == 6 -> when {
-            num / 100000 == 9 -> result + nine[0]
-            num / 100000 == 8 -> result + eight[0]
-            num / 100000 == 7 -> result + seven[0]
-            num / 100000 == 6 -> result + six[0]
-            num / 100000 == 5 -> result + five[0]
-            num / 100000 == 4 -> result + four[0]
-            num / 100000 == 3 -> result + three[0]
-            num / 100000 == 2 -> result + two[0]
-            num / 100000 == 1 -> result + one[0]
-
-
-
-        }
-        digitNumber == 5 -> when {
-
-        }
-        digitNumber == 4 -> when {
-
-        }
-        digitNumber == 3 -> when {
-
-        }
-        digitNumber == 2 -> when {
-
-        }
-        digitNumber == 1 -> when {
-
-        }
-    }
-    return ""
-}
+fun russian(n: Int): String = TODO()
