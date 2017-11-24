@@ -264,13 +264,12 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val numberInList = convert(n, base)
-    numberInList.toMutableList()
     var resultString = ""
-    for (i in 0 until numberInList.size) {
-        if (numberInList[i] <= 9)
-            resultString += '0' + numberInList[i]
+    for (i in numberInList) {
+        if (i <= 9)
+            resultString += '0' + i
         else
-            resultString += 'a' + numberInList[i] - 10
+            resultString += 'a' + i - 10
     }
     return resultString
 }
@@ -284,10 +283,9 @@ fun convertToString(n: Int, base: Int): String {
  */
 fun decimal(digits: List<Int>, base: Int): Int {
     var numberInDecimal = 0
-    var tPow = 0.0
     for (i in (digits.size - 1) downTo 0) {
-        numberInDecimal += digits[i] * pow(base.toDouble(), tPow).toInt()
-        tPow++
+        numberInDecimal += digits[i] * pow(base.toDouble(),
+                (digits.lastIndex - i).toDouble()).toInt()
     }
     return numberInDecimal
 }
