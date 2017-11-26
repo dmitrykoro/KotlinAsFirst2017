@@ -266,9 +266,9 @@ fun firstDuplicateIndex(str: String): Int {
     var index = 0
     for (i in wordsList) {
         if (i.toLowerCase() == prevWord.toLowerCase()) {
-            return str.indexOf(prevWord.first(), index)
+            return str.indexOf(prevWord.first(), index - 1)
         }
-        index += prevWord.length
+        index += prevWord.length + 1
         prevWord = i
     }
     return -1
