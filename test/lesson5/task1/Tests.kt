@@ -99,6 +99,7 @@ class Tests {
     @Test
     @Tag("Hard")
     fun mostExpensive() {
+        assertEquals("Any good with price 0.0", mostExpensive("BtW%&JW8CWfZ/15D 0"))
         assertEquals("", mostExpensive(""))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
@@ -107,6 +108,7 @@ class Tests {
     @Test
     @Tag("Hard")
     fun fromRoman() {
+        assertEquals(-1, fromRoman("\"e5+1(khH!MI1,&'YX.oThNAn30g)9`M@PNrkmH=T#}$ uRhXe;~/JdIwC:]#uvb>7I^B,%;$%T[q\\LR!@&X\n>,.&n0DK#"))
         assertEquals(1, fromRoman("I"))
         assertEquals(3000, fromRoman("MMM"))
         assertEquals(1978, fromRoman("MCMLXXVIII"))

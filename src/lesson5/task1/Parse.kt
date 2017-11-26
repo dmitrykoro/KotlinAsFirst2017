@@ -153,35 +153,6 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 
-/*fun bestLongJump(jumps: String): Int {   *Другая реализация*
-    var currentNumber = "-1"
-    var maxNumber = -1
-    var weAreInNum = false
-    for (i in jumps) {
-        if (i in " -%0123456789") {
-            if (i in "0123456789") {
-                weAreInNum = true
-                currentNumber += i
-            }
-            else {
-                if (weAreInNum) {
-                    weAreInNum = false
-                    if (currentNumber.toInt() > maxNumber) {
-                        maxNumber = currentNumber.toInt()
-                    }
-                    currentNumber = ""
-                }
-            }
-        }
-        else return -1
-    }
-    if (currentNumber.toInt() > maxNumber) {
-        maxNumber = currentNumber.toInt()
-    }
-    return maxNumber
-}*/
-
-
 fun bestLongJump(jumps: String): Int {
     val parts = jumps.split(" ")
     var currentValue = -1
@@ -288,6 +259,8 @@ fun throwIllegalArgumentException () {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
+    if (str.isEmpty())
+        return -1
     val wordsList = str.split(" ")
     var prevWord = ""
     var index = 0
@@ -313,29 +286,6 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть положительными
  */
 
-/*fun mostExpensive(description: String): String {  *Реализация с map*
-    val productsList = description.split(";")
-    val productsMap = mutableMapOf<String, Double>()
-    var maxPrice = 0.0
-    var mostExpensive = ""
-    for (i in productsList) {
-        try {
-            val currentProduct = i.trim().split(" ")
-            productsMap += mapOf(currentProduct[0] to currentProduct[1].toDouble())
-        }
-        catch (e: Exception) {
-            return ""
-        }
-    }
-    for (i in productsMap) {
-        if (i.value > maxPrice) {
-            maxPrice = i.value
-            mostExpensive = i.key
-        }
-    }
-    return mostExpensive
-}*/
-
 fun mostExpensive(description: String): String {
     val productsList = description.split(";")
     var maxPrice = 0.0
@@ -343,7 +293,7 @@ fun mostExpensive(description: String): String {
     for (i in productsList) {
         try {
             val currentProduct = i.trim().split(" ")
-            if (currentProduct[1].toDouble() > maxPrice) {
+            if (currentProduct[1].toDouble() >= maxPrice) {
                 mostExpensive = currentProduct[0]
                 maxPrice = currentProduct[1].toDouble()
             }
@@ -384,7 +334,7 @@ fun fromRoman(roman: String): Int {
             }
         }
     }
-    if (!thereWasSmth)
+    if (!thereWasSmth || !str.isEmpty())
         return -1
     return result
 }
