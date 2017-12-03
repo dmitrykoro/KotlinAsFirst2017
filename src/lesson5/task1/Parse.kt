@@ -244,9 +244,8 @@ fun plusMinus(expression: String): Int {
     return result
 }
 
-fun throwIllegalArgumentException () {
-    val x = IllegalArgumentException()
-    throw x
+fun throwIllegalArgumentException() {
+    throw IllegalArgumentException()
 }
 
 /**

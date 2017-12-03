@@ -6,6 +6,7 @@ import lesson1.task1.sqr
 import lesson3.task1.digitNumber
 import java.lang.Math.pow
 import java.lang.Math.sqrt
+import java.lang.StringBuilder
 
 /**
  * Пример
@@ -230,9 +231,9 @@ fun factorize(n: Int): List<Int> {
  */
 fun factorizeToString(n: Int): String {
     val resultInList = factorize(n)
-    var stringOfSimpleMultipliers = ""
+    var stringOfSimpleMultipliers = StringBuilder()
     for (i in resultInList) {
-        stringOfSimpleMultipliers += "$i*"
+        stringOfSimpleMultipliers.append("$i*")
     }
     return stringOfSimpleMultipliers.substring(0, stringOfSimpleMultipliers.length - 1)
 }
@@ -264,14 +265,14 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val numberInList = convert(n, base)
-    var resultString = ""
+    var resultString = StringBuilder()
     for (i in numberInList) {
         if (i <= 9)
-            resultString += '0' + i
+            resultString.append('0' + i)
         else
-            resultString += 'a' + i - 10
+            resultString.append('a' + i - 10)
     }
-    return resultString
+    return resultString.toString()
 }
 
 /**
