@@ -2,6 +2,13 @@
 package lesson6.task1
 
 import lesson1.task1.sqr
+import lesson2.task1.segmentLength
+import lesson3.task1.cos
+import lesson3.task1.sin
+import java.lang.Math
+import java.lang.Math.PI
+import java.lang.Math.atan2
+
 
 /**
  * Точка на плоскости
@@ -101,7 +108,21 @@ data class Segment(val begin: Point, val end: Point) {
  * Дано множество точек. Вернуть отрезок, соединяющий две наиболее удалённые из них.
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
-fun diameter(vararg points: Point): Segment = TODO()
+fun diameter(vararg points: Point): Segment {
+    if (points.size < 2) throw IllegalArgumentException()
+    var first = points[0]
+    var last = points[1]
+    for (i in 0 until points.size) {
+        for (j in i + 1 until points.size) {
+            if (points[i].distance(points[j]) > first.distance(last)) {
+                first = points[i]
+                last = points[j]
+            }
+        }
+    }
+    return Segment(first, last)
+}
+
 
 /**
  * Простая
@@ -109,7 +130,11 @@ fun diameter(vararg points: Point): Segment = TODO()
  * Построить окружность по её диаметру, заданному двумя точками
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
-fun circleByDiameter(diameter: Segment): Circle = TODO()
+fun circleByDiameter(diameter: Segment): Circle =
+        Circle(Point(diameter.begin.x + (diameter.end.x - diameter.begin.x) / 2.0,
+                diameter.begin.y +  (diameter.end.y - diameter.begin.y) / 2.0),
+                diameter.begin.distance(diameter.end) / 2.0)
+
 
 /**
  * Прямая, заданная точкой point и углом наклона angle (в радианах) по отношению к оси X.
@@ -148,21 +173,32 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line {
+    val x = s.end.x - s.begin.x
+    val y = s.end.y - s.begin.y
+    val corner = atan2(y, x) % PI
+    return Line(s.begin, corner)
+}
 
 /**
  * Средняя
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val x = b.x - a.x
+    val y = b.y - a.y
+    val pointBtw = Point(a.x + x / 2.0, a.y + y / 2)
+    return lineByPoints(Point(pointBtw.x - y, pointBtw.y + x),
+            Point(pointBtw.x + y, pointBtw.y - x))
+}
 
 /**
  * Средняя
@@ -170,7 +206,20 @@ fun bisectorByPoints(a: Point, b: Point): Line = TODO()
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    if (circles.size < 2) throw IllegalArgumentException()
+    var first = circles[0]
+    var last = circles[1]
+    for (i in 0 until circles.size) {
+        for (j in i + 1 until circles.size) {
+            if (first.distance(last) > circles[i].distance(circles[j])) {
+                first = circles[i]
+                last = circles[j]
+            }
+        }
+    }
+    return Pair(first, last)
+}
 
 /**
  * Сложная
@@ -182,6 +231,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+
 
 /**
  * Очень сложная
