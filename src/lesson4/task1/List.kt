@@ -231,11 +231,13 @@ fun factorize(n: Int): List<Int> {
  */
 fun factorizeToString(n: Int): String {
     val resultInList = factorize(n)
-    var stringOfSimpleMultipliers = StringBuilder()
-    for (i in resultInList) {
-        stringOfSimpleMultipliers.append("$i*")
+    val stringOfSimpleMultipliers = StringBuilder()
+    for (i in 0 until resultInList.size ) {
+        stringOfSimpleMultipliers.append(resultInList[i])
+        if (i != resultInList.size - 1)
+            stringOfSimpleMultipliers.append("*")
     }
-    return stringOfSimpleMultipliers.substring(0, stringOfSimpleMultipliers.length - 1)
+    return stringOfSimpleMultipliers.toString()
 }
 
 /**

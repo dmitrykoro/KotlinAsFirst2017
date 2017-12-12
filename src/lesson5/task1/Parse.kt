@@ -317,24 +317,23 @@ fun mostExpensive(description: String): String {
  */
 
 fun fromRoman(roman: String): Int {
-    val conformity = mapOf("IV" to 4,
-            "IX" to 9, "XL" to 40, "XC" to 90, "CD" to 400, "CM" to 900,
-            "I" to 1, "V" to 5, "X" to 10, "L" to 50, "C" to 100,
-            "D" to 500, "M" to 1000)
     var result = 0
-    var thereWasSmth = false
-    var str = roman
-    for (i in conformity) {
-        if (i.key in str) {
-            thereWasSmth = true
-            while (i.key in str) {
-                result += i.value
-                str = str.replaceFirst(i.key, "")
-            }
+    val numsInRoman = listOf("IV", "IX", "XL", "XC", "CD", "CM", "I", "V", "X", "L", "C", "D", "M")
+    val numsInDecimal = listOf(4,     9,   40,   90,  400,  900,  1,   5,   10,  50, 100, 500, 1000)
+    var i = 0
+    do {
+        val tmp = StringBuilder ("")
+        if (i < roman.length - 1 &&
+                tmp.append(roman[i], roman[i + 1]).toString() in numsInRoman) {
+            result += numsInDecimal[numsInRoman.indexOf(tmp.toString())]
+            i += 2
         }
-    }
-    if (!thereWasSmth || !str.isEmpty())
-        return -1
+        else if (roman[i].toString() in numsInRoman) {
+            result += numsInDecimal[numsInRoman.indexOf(roman[i].toString())]
+            i++
+        }
+        else return -1
+    } while (i < roman.length)
     return result
 }
 
