@@ -317,6 +317,7 @@ fun mostExpensive(description: String): String {
  */
 
 fun fromRoman(roman: String): Int {
+    if (roman.isEmpty()) return -1
     var result = 0
     val numsInRoman = listOf("IV", "IX", "XL", "XC", "CD", "CM", "I", "V", "X", "L", "C", "D", "M")
     val numsInDecimal = listOf(4,     9,   40,   90,  400,  900,  1,   5,   10,  50, 100, 500, 1000)
