@@ -414,7 +414,10 @@ fun russian(n: Int): String {
     if (digitNumber(n) > 3)
         num = separate(n)
     for (i in num) {
-        inRussian.append(makePart(i, isFirst))
+        if (num.size == 1) {
+            inRussian.append(makePart(i, false))
+        }
+        else inRussian.append(makePart(i, isFirst))
         if (isFirst && num.size > 1)
             when (i % 10) {
                 1 -> inRussian.append(" тысяча ")
