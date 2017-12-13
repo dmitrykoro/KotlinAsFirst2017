@@ -356,7 +356,7 @@ val unitsIfLast = listOf("", "один", "два", "три", "четыре", "п
 
 fun makePart(num: Int, isFirst: Boolean): String {
     var number = num
-    var result = StringBuilder("")
+    val result = StringBuilder("")
     if (number / 10 != 0) {
         if (number % 100 in 10..19) {
             result.insert(0, tensToTwenty[number % 10])
