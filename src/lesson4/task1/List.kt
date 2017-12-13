@@ -344,4 +344,86 @@ fun roman(n: Int): String  {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+
+val hundreds = listOf("", "сто", "двести", "триста", "четыреста",
+        "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+val tensToHundred = listOf("", "", "двадцать", "тридцать", "сорок",
+        "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+val tensToTwenty = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
+        "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+val unitsIfFirst = listOf("", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+val unitsIfLast = listOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+
+fun makePart(num: Int, isFirst: Boolean): String {
+    var number = num
+    var result = StringBuilder("")
+    if (number / 10 != 0) {
+        if (number % 100 in 10..19) {
+            result.insert(0, tensToTwenty[number % 10])
+            number /= 100
+            if (number == 0) return result.toString()
+            result.insert(0, hundreds[number] + " ")
+            return result.toString()
+        }
+        else {
+            if (isFirst)
+                result.insert(0, unitsIfFirst[number % 10])
+
+            else
+                result.insert(0, unitsIfLast[number % 10])
+            number /= 10
+            if (number == 0) return result.toString()
+            result.insert(0, tensToHundred[number % 10] + " ")
+            number /= 10
+            if (number == 0) return result.toString()
+            result.insert(0, hundreds[number] + " ")
+        }
+    }
+    else {
+        return if (isFirst) unitsIfFirst[number % 10] else
+        unitsIfLast[number % 10]
+    }
+    if (number == 0) return result.toString()
+
+    return result.toString()
+}
+
+fun separate(num: Int): List<Int> {
+    var parts = listOf<Int>()
+    parts += num / 1000
+    parts += num % 1000
+    return parts
+}
+
+fun deleteAddinitionDelays(str: StringBuilder): StringBuilder {
+    var i = 0
+    while(i < str.length) {
+        if (i + 1 < str.length && str[i].toString() == " " && str[i + 1].toString() == " ") {
+            str.deleteCharAt(i + 1)
+            i--
+        }
+        i++
+    }
+    return str
+}
+
+fun russian(n: Int): String {
+    var num = listOf(n)
+    var inRussian = StringBuilder("")
+    var isFirst = true
+    if (digitNumber(n) > 3)
+        num = separate(n)
+    for (i in num) {
+        inRussian.append(makePart(i, isFirst))
+        if (isFirst && num.size > 1)
+            when (i % 10) {
+                1 -> inRussian.append(" тысяча ")
+                in 5..9 -> inRussian.append(" тысяч ")
+                0 -> inRussian.append(" тысяч ")
+                else -> inRussian.append(" тысячи ")
+            }
+        isFirst = false
+    }
+    inRussian = deleteAddinitionDelays(inRussian)
+    return inRussian.toString().trim()
+}
