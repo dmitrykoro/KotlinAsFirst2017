@@ -383,8 +383,6 @@ fun makePart(num: Int, isFirst: Boolean): String {
         return if (isFirst) unitsIfFirst[number % 10] else
         unitsIfLast[number % 10]
     }
-    if (number == 0) return result.toString()
-
     return result.toString()
 }
 
