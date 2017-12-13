@@ -419,12 +419,16 @@ fun russian(n: Int): String {
         }
         else inRussian.append(makePart(i, isFirst))
         if (isFirst && num.size > 1)
-            when (i % 10) {
+            if (i % 100 in 11..14) {
+                inRussian.append(" тысяч ")
+            }
+        else when (i % 10) {
                 1 -> inRussian.append(" тысяча ")
                 in 5..9 -> inRussian.append(" тысяч ")
                 0 -> inRussian.append(" тысяч ")
                 else -> inRussian.append(" тысячи ")
             }
+
         isFirst = false
     }
     inRussian = deleteAddinitionDelays(inRussian)
