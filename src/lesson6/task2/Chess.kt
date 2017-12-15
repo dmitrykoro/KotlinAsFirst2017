@@ -117,7 +117,13 @@ fun rookTrajectory(start: Square, end: Square): List<Square> =
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int = when {
+    !start.inside() || !end.inside() -> throw IllegalArgumentException()
+    (start.column + start.row) % 2 != (end.column + end.row) % 2 -> -1
+    start == end -> 0
+    Math.abs(start.column - end.column) == Math.abs(start.row - end.row) -> 1
+    else -> 2
+}
 
 /**
  * Сложная
@@ -137,7 +143,20 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square) = when (bishopMoveNumber(start, end)) {
+    -1 -> listOf()
+    0 -> listOf(start)
+    1 -> listOf(start, end)
+    else -> {
+        var col = (start.column - start.row + end.column + end.row) / 2
+        var row =  (start.row - start.column + end.column + end.row) / 2
+        if (!Square(col, row).inside()) {
+            col = (end.column - end.row + start.column + start.row) / 2
+            row =  (end.row - end.column + start.column + start.row) / 2
+        }
+        listOf(start, Square(col, row), end)
+    }
+}
 
 /**
  * Средняя
